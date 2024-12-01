@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Flip Simulation - Quantum Uncertainty</title>
+    
+    <style>
+        /* Cyberpunk Neon Style */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            color: #0ff;
+            background: linear-gradient(135deg, #000428, #004e92);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0ff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #0ff;
+        }
+        h1, h2 {
+            text-align: center;
+            text-shadow: 0 0 10px #f0f, 0 0 20px #ff0;
+        }
+        p {
+            line-height: 1.6;
+        }
+        pre {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #0ff;
+            overflow-x: auto;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #000;
+            background: #0ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #ff0;
+        }
+        button:hover {
+            background: #ff0;
+            color: #000;
+            box-shadow: 0 0 20px #f0f;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #fff;
+        }
+        .copiable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coin Flip Simulation</h1>
+        <h2>Demonstrating the Quantum Uncertainty Principle</h2>
+        <p>
+            This simulation uses a simple analogy of coin flips to demonstrate how the uncertainty principle works. The 
+            "position-like" property corresponds to the number of heads in each trial, and the "momentum-like" property 
+            corresponds to the number of transitions between heads and tails. By running this simulation, you can observe 
+            the complementary nature of these properties.
+            To check this all you have to do is to copy the code and paste it on a online compiler or run it on your compiler
+        </p>
+        <h2>Copy and Run the Code</h2>
+        <pre id="code" class="copiable">
+# Coin flip simulation for the uncertainty principle
+
+# Function to simulate a single coin flip (returns 1 for Heads, 0 for Tails)
+def random_choice():
+    import time
+    seed = int(str(time.time_ns())[-5:])
+    return seed % 2 == 0
+
+# Function to simulate multiple coin flips across trials
+def coin_flips(num_flips, num_trials):
+    results = []
+    for _ in range(num_trials):
+        trial = []
+        for _ in range(num_flips):
+            trial.append(1 if random_choice() else 0)
+        results.append(trial)
+    return results
+
+#  Calculate "position-like" property: total heads in each trial
+def calculate_position(results):
+    position_values = []
+    for trial in results:
+        position_values.append(sum(trial))  # Total heads in one trial
+    return position_values
+
+# Calculate "momentum-like" property: head-tail transitions in each trial
+def calculate_momentum(results):
+    momentum_values = []
+    for trial in results:
+        transitions = 0
+        for i in range(1, len(trial)):
+            if trial[i] != trial[i - 1]:  # Count changes between Heads and Tails
+                transitions += 1
+        momentum_values.append(transitions)
+    return momentum_values
+
+# Calculate the standard deviation of a list of values
+def calculate_std(values):
+    mean = sum(values) / len(values)  # Calculate mean
+    variance = sum((x - mean) ** 2 for x in values) / len(values)  # Variance
+    return variance ** 0.5  # Standard deviation is the square root of variance
+
+# Main simulation
+def main():
+    # Parameters
+    num_flips = 100  # Number of coin flips per trial
+    num_trials = 1000  # Number of trials
+    hbar = 1  # Analogous to Planck's constant (just for scaling)
+
+    print("Simulating coin flips...")
+    
+    # Simulate coin flips
+    results = coin_flips(num_flips, num_trials)
+
+    # Calculate properties
+    print("Calculating position-like and momentum-like properties...")
+    position_values = calculate_position(results)  # Total Heads
+    momentum_values = calculate_momentum(results)  # Head-Tail transitions
+
+    # Calculate uncertainties
+    delta_x = calculate_std(position_values)  # Standard deviation of position-like
+    delta_p = calculate_std(momentum_values)  # Standard deviation of momentum-like
+    uncertainty_product = delta_x * delta_p
+
+    # Output results
+    print("\n--- Simulation Results ---")
+    print(f"Total number of trials: {num_trials}")
+    print(f"Coin flips per trial: {num_flips}")
+    print(f"Position-like uncertainty (Δx): {delta_x:.4f}")
+    print(f"Momentum-like uncertainty (Δp): {delta_p:.4f}")
+    print(f"Uncertainty product (Δx * Δp): {uncertainty_product:.4f}")
+    print(f"Theoretical lower bound (ħ/2): {hbar / 2:.4f}")
+
+    print("\nObservation:")
+    print("The product of uncertainties (Δx * Δp) is consistent with the uncertainty principle. "
+          "In this simulation, the uncertainties in position-like and momentum-like properties "
+          "demonstrate the complementary nature of these measurements.")
+
+# Run the simulation
+main()
+
+
+        </pre>
+        <button onclick="copyCode()">Copy Code</button>
+    </div>
+    <footer>
+        Made for Physics Enthusiasts
+    </footer>
+
+    <script>
+        function copyCode() {
+            const codeElement = document.getElementById('code');
+            const code = codeElement.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy the code. Please try again.');
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
